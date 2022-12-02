@@ -1,6 +1,7 @@
 package main
 
 import (
+	"advent_2022/internal/pkg/helpers"
 	"advent_2022/internal/pkg/input_handler"
 	"fmt"
 	"log"
@@ -18,36 +19,64 @@ func main() {
 		}
 	}(scanner)
 
-	points := 0
+	firstPoints := 0
+	secondPoints := 0
 
 	for scanner.Scan() {
 		play := strings.Fields(scanner.Text())
 
-		points += evaluate(translate(play[0]), translate(play[1]))
+		firstPoints += evaluate(translate(play[0]), translate(play[1]))
+		secondPoints += calculateYourPlay(translate(play[0]), translate(play[1]))
 	}
 
-	fmt.Printf("The total points are: %d\n", points)
+	fmt.Printf("1) The total points are: %d\n", firstPoints)
+	fmt.Printf("2) The total points are: %d\n", secondPoints)
 }
 
+/*
+Translates a play into integers.
+*/
 func translate(choice string) (result int) {
 	if choice == "A" || choice == "X" {
-		result = 1
+		result = 0
 	} else if choice == "B" || choice == "Y" {
-		result = 2
+		result = 1
 	} else {
-		result = 3
+		result = 2
 	}
 
 	return result
 }
 
+/*
+How to evaluate a play for the first exercise.
+*/
 func evaluate(opponent, you int) (result int) {
 	result += you
 	if opponent == you {
 		result += 3
-	} else if (opponent == 1 && you == 2) || (opponent == 2 && you == 3) || (opponent == 3 && you == 1) {
+	} else if (opponent == 0 && you == 1) || (opponent == 1 && you == 2) || (opponent == 2 && you == 0) {
 		result += 6
 	}
 
-	return result
+	return result + 1
+}
+
+/*
+How to evaluate a play for the second exercise.
+*/
+func calculateYourPlay(opponent, you int) (result int) {
+	var play int
+	if you == 0 {
+		// You have to lose
+		play = helpers.MyMod(opponent-1, 3)
+	} else if you == 1 {
+		// You have to reach a draw
+		play = opponent
+	} else {
+		// You have to win
+		play = helpers.MyMod(opponent+1, 3)
+	}
+
+	return evaluate(opponent, play)
 }
