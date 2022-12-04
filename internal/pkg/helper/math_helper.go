@@ -1,4 +1,4 @@
-package helpers
+package helper
 
 func MyMod(x, y int) (result int) {
 	result = x % y

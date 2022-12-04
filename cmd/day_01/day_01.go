@@ -1,7 +1,7 @@
 package main
 
 import (
-	"advent_2022/internal/pkg/input_handler"
+	"advent_2022/internal/pkg/filemodel"
 	"fmt"
 	"log"
 	"strconv"
@@ -10,8 +10,8 @@ import (
 // https://adventofcode.com/2022/day/1
 
 func main() {
-	scanner := input_handler.CreateScanner("01", "01")
-	defer func(scanner input_handler.FileScanner) {
+	scanner := filemodel.CreateScanner("01", "01")
+	defer func(scanner filemodel.FileScanner) {
 		err := scanner.Close()
 		if err != nil {
 			log.Fatal(err)

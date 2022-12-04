@@ -1,4 +1,4 @@
-package input_handler
+package filemodel
 
 import (
 	"bufio"

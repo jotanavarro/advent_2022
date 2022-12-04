@@ -1,8 +1,8 @@
 package main
 
 import (
-	"advent_2022/internal/pkg/helpers"
-	"advent_2022/internal/pkg/input_handler"
+	"advent_2022/internal/pkg/filemodel"
+	"advent_2022/internal/pkg/helper"
 	"fmt"
 	"log"
 	"strings"
@@ -11,8 +11,8 @@ import (
 // https://adventofcode.com/2022/day/1
 
 func main() {
-	scanner := input_handler.CreateScanner("02", "01")
-	defer func(scanner input_handler.FileScanner) {
+	scanner := filemodel.CreateScanner("02", "01")
+	defer func(scanner filemodel.FileScanner) {
 		err := scanner.Close()
 		if err != nil {
 			log.Fatal(err)
@@ -69,13 +69,13 @@ func calculateYourPlay(opponent, you int) (result int) {
 	var play int
 	if you == 0 {
 		// You have to lose
-		play = helpers.MyMod(opponent-1, 3)
+		play = helper.MyMod(opponent-1, 3)
 	} else if you == 1 {
 		// You have to reach a draw
 		play = opponent
 	} else {
 		// You have to win
-		play = helpers.MyMod(opponent+1, 3)
+		play = helper.MyMod(opponent+1, 3)
 	}
 
 	return evaluate(opponent, play)
