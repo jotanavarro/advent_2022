@@ -21,8 +21,64 @@ func main() {
 	}(scanner)
 
 	calculatePriority(scanner)
+
+	scanner = filemodel.CreateScanner("03", "01")
+	defer func(scanner filemodel.FileScanner) {
+		err := scanner.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(scanner)
+
+	calculateBadgePriorities(scanner)
 }
 
+/*
+calculateBadgePriorities will solve the second part of the puzzle.
+*/
+func calculateBadgePriorities(scanner filemodel.FileScanner) {
+	badgePriority := 0
+
+	for scanner.Scan() {
+		var elfGroup []string
+		elfGroup = append(elfGroup, scanner.Text())
+
+		for i := 0; i < 2; i++ {
+			scanner.Scan()
+			elfGroup = append(elfGroup, scanner.Text())
+		}
+
+		badge, err := findBadge(elfGroup)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		badgeScore, err := calculateScore(badge)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		badgePriority += badgeScore
+	}
+
+	fmt.Printf("The total priority of the badges is: %d\n", badgePriority)
+}
+
+/*
+findBadge will find in a triad of strings the first letter present in all of them, then return it.
+*/
+func findBadge(elfGroup []string) (badge string, err error) {
+	for _, char := range elfGroup[0] {
+		if strings.ContainsRune(elfGroup[1], char) && strings.ContainsRune(elfGroup[2], char) {
+			return string(char), nil
+		}
+	}
+	return "", errors.New("No duplicate found!")
+}
+
+/*
+calculatePriority will solve the first part of the puzzle.
+*/
 func calculatePriority(scanner filemodel.FileScanner) {
 	totalPriority := 0
 
@@ -40,6 +96,11 @@ func calculatePriority(scanner filemodel.FileScanner) {
 	fmt.Printf("Total priority for the sum of all backpacks is: %d.\n", totalPriority)
 }
 
+/*
+findDuplicate will find any character in the first half of a string which is present in the second half.  This function
+is very naive assuming all the strings are of an even length and that we will only return the first duplicate, ignoring
+any other potential duplicate.
+*/
 func findDuplicate(content string) (duplicate string, err error) {
 	midpoint := len(content) / 2
 
